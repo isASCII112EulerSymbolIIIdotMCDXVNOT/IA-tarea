@@ -1,11 +1,4 @@
-"""Visualización: animación lado a lado (A* vs BFS) y gráfica comparativa.
-
-La animación reproduce la bitácora (`Resultado.pasos`) paso a paso, de modo que
-se ve en vivo qué nodos entran a la frontera, cuáles se expanden, en qué orden,
-y finalmente el camino encontrado.
-"""
 from __future__ import annotations
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
@@ -21,15 +14,13 @@ CMAP = ListedColormap(COLORES)
 
 
 class Reproductor:
-    """Reconstruye el estado de la cuadrícula tras k pasos de una búsqueda."""
-
     def __init__(self, grid: Cuadricula, inicio: Celda, meta: Celda, resultado: Resultado):
         self.grid, self.inicio, self.meta, self.res = grid, inicio, meta, resultado
         self.reiniciar()
 
     def reiniciar(self) -> None:
         self.k = 0
-        self.estado = np.array(self.grid, dtype=int)  # 0 libre, 1 obstáculo
+        self.estado = np.array(self.grid, dtype=int)
         self.frontera: set[Celda] = {self.inicio}
         self.explorados: set[Celda] = set()
         self.ultimo = None
@@ -62,7 +53,6 @@ class Reproductor:
 
     @property
     def camino_visible(self) -> bool:
-        """El camino final se dibuja como línea encima, solo cuando la búsqueda terminó."""
         return self.terminado and bool(self.res.camino)
 
     def texto(self) -> str:
@@ -107,10 +97,6 @@ def animar(
     espera_final: int = 25,
     png_final: str | None = None,
 ) -> None:
-    """Anima dos búsquedas lado a lado sobre el mismo mapa.
-
-    paso: cuántos nodos expandidos avanza cada cuadro (más alto = animación más corta).
-    """
     fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(11, 6.6))
     fig.suptitle("Misma instancia, dos búsquedas: informada (A*) vs no informada (BFS)", fontsize=12)
     img_a, act_a, lin_a = _preparar_eje(ax_a, grid, res_a.nombre)
@@ -162,7 +148,6 @@ def animar(
 
 
 def grafica_comparacion(resultados: list[Resultado], ruta: str) -> None:
-    """Barras con nodos expandidos por algoritmo (mismo mapa, mismo costo óptimo)."""
     nombres = [r.nombre.replace(" (", "\n(") for r in resultados]
     valores = [r.expandidos for r in resultados]
     colores = ["#2a9d8f" if r.nombre.startswith("A*") else "#8d99ae" for r in resultados]
@@ -172,7 +157,7 @@ def grafica_comparacion(resultados: list[Resultado], ruta: str) -> None:
     ax.bar_label(barras, padding=3, fontsize=11, fontweight="bold")
     ax.set_ylabel("Nodos expandidos")
     costo = resultados[0].costo
-    ax.set_title(f"Nodos expandidos para llegar a la meta (camino óptimo de costo {costo:.0f} en todos)")
+    ax.set_title(f"Nodos expandidos para llegar a la meta (camino optimo de costo {costo:.0f} en todos)")
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_ylim(0, max(valores) * 1.15)
     fig.tight_layout()

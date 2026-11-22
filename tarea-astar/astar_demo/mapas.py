@@ -1,11 +1,7 @@
-"""Mapas de ejemplo. Leyenda: '#' obstáculo, 'S' inicio, 'G' meta, '.' libre."""
 from __future__ import annotations
-
 import random
-
 from .algoritmos import Celda, Cuadricula, bfs
 
-# Mapa 'demo': obstáculos dispersos; A* casi va en línea recta hacia la meta.
 MAPA_DEMO = """\
 ....................
 .S..................
@@ -29,8 +25,7 @@ MAPA_DEMO = """\
 ....................
 """
 
-# Mapa 'trampa': una "copa" abierta hacia el inicio. La heurística empuja a A*
-# hacia el fondo de la copa y ahí se ve su límite: hay que rodearla.
+
 MAPA_TRAMPA = """\
 ....................
 ....................
@@ -56,9 +51,7 @@ MAPA_TRAMPA = """\
 
 MAPAS = {"demo": MAPA_DEMO, "trampa": MAPA_TRAMPA}
 
-
 def cargar_mapa(texto: str) -> tuple[Cuadricula, Celda, Celda]:
-    """Convierte el texto de un mapa en (cuadrícula, inicio, meta)."""
     lineas = [l for l in texto.splitlines() if l.strip()]
     ancho = len(lineas[0])
     if any(len(l) != ancho for l in lineas):
@@ -85,7 +78,6 @@ def cargar_mapa(texto: str) -> tuple[Cuadricula, Celda, Celda]:
 def generar_aleatorio(
     filas: int = 20, columnas: int = 20, densidad: float = 0.25, semilla: int = 7
 ) -> tuple[Cuadricula, Celda, Celda]:
-    """Mapa aleatorio con solución garantizada (reintenta hasta que exista camino)."""
     rng = random.Random(semilla)
     inicio, meta = (1, 1), (filas - 2, columnas - 2)
     while True:
